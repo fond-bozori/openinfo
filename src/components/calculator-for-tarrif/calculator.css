@@ -1,0 +1,32 @@
+.calculator .el-collapse {
+    border: none;
+}
+
+.calculator .el-collapse-item {
+    background: #EAF5FF;
+    padding: 8px 32px;
+    border-radius: 8px;
+    margin: 10px 0;
+
+}
+
+.calculator .el-collapse-item__wrap {
+    background: #EAF5FF;
+}
+
+.calculator .el-collapse-item__header  {
+    background: #EAF5FF;
+    font-size: 20px;
+    color:#535353 ;
+    font-weight: bold;
+}
+
+
+.calculator .el-collapse-item__header {
+    font-size: 20px;
+}
+
+.calculator .el-collapse-item__content {
+    background: #EAF5FF;
+
+}
