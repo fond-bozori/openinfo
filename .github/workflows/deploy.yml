@@ -1,0 +1,29 @@
+name: Deploy Frontend
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: self-hosted # Используем self-hosted Runner
+
+    steps:
+      # Проверяем исходный код
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Устанавливаем Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      # Устанавливаем зависимости
+      - name: Install dependencies
+        run: npm install
+
+      # Сборка проекта
+      - name: Build project
+        run: npm run build
