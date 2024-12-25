@@ -9,24 +9,19 @@
     :close-on-click-modal="false"
     @close="closeDialog"
   >
-    <!-- <template #title>
+    <template #title>
       <div class="d-flex justify-content-between align-items-center">
         <span>{{ t('message.notifications') }}</span>
         <el-button type="primary" @click="markAllAsRead">
           {{ t('message.mark_all_as_read') }}
         </el-button>
       </div>
-    </template> -->
+    </template>
 
     <div
       class="card-container d-flex mt-3 gap-5 flex-wrap justify-content-between trade"
     >
-      <el-table
-        :data="cardData.results"
-        :border="false"
-        style="width: 100%"
-        @expand-change="handleExpand"
-      >
+      <el-table :data="cardData.results" :border="false" style="width: 100%">
         <!-- Expandable Row -->
         <el-table-column type="expand">
           <template #default="props">
@@ -87,15 +82,17 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column
-          width="200"
-          :label="t('message.Status')"
-          prop="is_read"
-        >
+        <el-table-column label="Actions" align="center" width="150">
           <template #default="scope">
-            <el-tag>{{
-              scope.row.is_read ? 'прочитано' : 'непрочитано'
-            }}</el-tag>
+            <el-button
+              size="small"
+              type="success"
+              v-if="!scope.row.is_read"
+              @click="markAsRead(scope.row.id)"
+            >
+              {{ t('message.mark_as_read') }}
+            </el-button>
+            <el-tag v-else type="info">{{ t('message.read') }}</el-tag>
           </template>
         </el-table-column>
       </el-table>
@@ -104,7 +101,7 @@
 </template>
 
 <script setup>
-  import { ref, defineProps, defineEmits, watch } from 'vue'
+  import { ref, defineProps, defineEmits, reactive, watch } from 'vue'
   import { useI18n } from 'vue-i18n'
   import http from '@/http/index.js'
 
@@ -112,11 +109,7 @@
 
   // Props and Emits
   const props = defineProps(['visible'])
-  const emit = defineEmits([
-    'update:visible',
-    'auth-required',
-    'update-notification-count',
-  ])
+  const emit = defineEmits(['update:visible'])
 
   // State
   const cardData = ref([])
@@ -132,18 +125,16 @@
       cardData.value = response.data
     } catch (error) {
       console.error('Error fetching notifications:', error)
-      if (error.response && error.response.status === 401) {
-        emit('auth-required') // Emit event to parent if 401 occurs
-      }
     }
   }
 
   const markAsRead = async (id) => {
     try {
-      await http.patch(`/organizations/notifications/${id}/`, {
-        is_read: true,
-      })
-      emit('update-notification-count')
+      await http.post(`/organizations/notifications/${id}/mark-as-read/`)
+      const notification = cardData.value.results.find((item) => item.id === id)
+      if (notification) {
+        notification.is_read = true
+      }
     } catch (error) {
       console.error('Error marking notification as read:', error)
     }
@@ -157,13 +148,6 @@
       })
     } catch (error) {
       console.error('Error marking all notifications as read:', error)
-    }
-  }
-
-  // Handle row expansion
-  const handleExpand = async (row, expanded) => {
-    if (expanded && !row.is_read) {
-      await markAsRead(row.id)
     }
   }
 
@@ -184,9 +168,5 @@
   }
   .font-weight-bold {
     font-weight: bold;
-  }
-
-  .item {
-    margin-top: 10px;
   }
 </style>

@@ -6,10 +6,8 @@
   <div class="calendar mt-3">
     <div class="button-container d-flex gap-3">
       <el-button @click="dialogVisible = true">Login </el-button>
-      <el-badge :value="notificationCount" color="green">
-        <el-button :icon="Bell" @click="notificationDialog = true"
-          >Alarm</el-button
-        >
+      <el-badge :value="notificationCount" color="green" :show-zero="false">
+        <el-button :icon="Bell" @click="fetchNotifications">Alarm</el-button>
       </el-badge>
     </div>
     <el-tabs
@@ -40,10 +38,13 @@
   <DialogComponent
     :visible="dialogVisible"
     @update:visible="dialogVisible = $event"
+    @login-success="onLoginSuccess"
   />
   <NotificationModal
     :visible="notificationDialog"
     @update:visible="notificationDialog = $event"
+    @auth-required="openLoginModal"
+    @update-notification-count="fetchNotifications"
   />
 </template>
 
@@ -84,20 +85,41 @@
     }
   }
 
-  // const fetchNotifications = async () => {
-  //   try {
-  //     const response = await http.get(`/organizations/notifications/`, {})
-  //     notificationCount.value = response?.data.results.length
-  //     notificationDialog.value = true
-  //   } catch (error) {
-  //     console.error('Error fetching trade data:', error)
-  //     if (error.response && error.response.status === 401) {
-  //       dialogVisible.value = true // Open modal on 401 error
-  //     }
+  const fetchNotifications = async () => {
+    try {
+      const response = await http.get(`/organizations/notification-count/`, {})
+      notificationCount.value = response?.data?.unread_notifications_count || 0
+      notificationDialog.value = true
+    } catch (error) {
+      console.error('Error fetching trade data:', error)
+      if (error.response && error.response.status === 401) {
+        dialogVisible.value = true // Open modal on 401 error
+      }
+      console.log(error.response.status, 'status')
+    }
+  }
 
-  //     console.log(error.response.status, 'status')
-  //   }
-  // }
+  const updateNotificationCount = async () => {
+    try {
+      const response = await http.get(`/organizations/notification-count/`, {})
+      notificationCount.value = response?.data?.unread_notifications_count || 0
+    } catch (error) {
+      console.error('Error fetching trade data:', error)
+      if (error.response && error.response.status === 401) {
+        dialogVisible.value = true // Open modal on 401 error
+      }
+      console.log(error.response.status, 'status')
+    }
+  }
+
+  const onLoginSuccess = async () => {
+    await updateNotificationCount() // Refresh notification count
+  }
+
+  const openLoginModal = () => {
+    notificationDialog.value = false // Close the notification modal
+    dialogVisible.value = true // Open the login modal
+  }
 
   onMounted(() => {
     fetchData()

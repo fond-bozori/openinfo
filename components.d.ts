@@ -186,6 +186,7 @@ declare module '@vue/runtime-core' {
     TableForTarrifs: typeof import('./src/components/calculator-for-tarrif/TableForTarrifs.vue')['default']
     Tenders: typeof import('./src/components/information disclosure/announcements/Tenders.vue')['default']
     Test: typeof import('./src/components/calculator-for-tarrif/Test.vue')['default']
+    Testcomonent: typeof import('./src/components/moderator-tool/testcomonent.vue')['default']
     TestComponent: typeof import('./src/components/TestComponent.vue')['default']
     TestMaterials: typeof import('./src/components/attestation-test/TestMaterials.vue')['default']
     TestMaterialsTable: typeof import('./src/components/professional-participants/TestMaterialsTable.vue')['default']

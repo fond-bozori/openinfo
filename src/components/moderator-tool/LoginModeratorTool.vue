@@ -45,7 +45,7 @@
   import http from '@/http'
 
   const props = defineProps(['visible'])
-  const emit = defineEmits(['update:visible'])
+  const emit = defineEmits(['update:visible', 'login-success'])
 
   const form = reactive({
     username: '',
@@ -59,8 +59,11 @@
   const sendUserLogin = async () => {
     try {
       const response = await http.post(`/userprofile/jwt/create/custom/`, form)
-      ElMessage.success(`Welcome, ${form.username}!`)
-      emit('update:visible', false)
+      if (response.status === 200) {
+        emit('login-success') // Notify parent of successful login
+        emit('update:visible', false) // Close modal
+        ElMessage.success(`Welcome, ${form.username}!`)
+      }
     } catch (err) {
       ElMessage.warning(` ${err.response.data.detail}!`)
       console.log(err)
