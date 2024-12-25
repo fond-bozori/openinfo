@@ -473,6 +473,40 @@
     <table class="table table-hover table-bordered">
       <thead>
         <tr>
+          <th class="table-header text-white" colspan="6">
+            Список заключенных сделок с аффилированными лицами отчетном году
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="text-center">Дата заключения сделки</td>
+          <td class="text-center">
+            Ф.И.О. или полное наименование контрагента
+          </td>
+          <td class="text-center">Предмет сделки</td>
+          <td class="text-center">Сумма</td>
+          <td class="text-center">
+            Орган эмитента, принявший решение по сделкам
+          </td>
+          <td class="text-center">
+            Полные формулировки решений, принятых по сделкам
+          </td>
+        </tr>
+        <tr v-for="item in data.affiliates_deal_report">
+          <td>{{ item.deal_date }}</td>
+          <td>{{ item.counter_party_name }}</td>
+          <td>{{ item.deal_object }}</td>
+          <td>{{ item.deal_cost }}</td>
+          <td>{{ item.emitent_body }}</td>
+          <td>{{ item.decision_body }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table class="table table-hover table-bordered">
+      <thead>
+        <tr>
           <th class="table-header text-white" colspan="4">
             {{ $t('message.affiliates') }}
           </th>

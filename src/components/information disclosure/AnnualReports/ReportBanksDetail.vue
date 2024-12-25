@@ -297,6 +297,54 @@
       <thead>
         <tr>
           <th class="table-header text-white" colspan="6">
+            {{ $t('message.main_info') }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="item in data.additional_stock_submission_report">
+          <th
+            :class="{ 'text-center': item.is_title }"
+            :colspan="item.is_title ? '6' : '1'"
+          >
+            {{ item.title }}
+          </th>
+          <td v-if="!item.is_title" class="text-center">{{ item.value }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th class="table-header text-white" colspan="6">
+            {{ $t('message.issued_essential_facts_year') }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="text-center">{{ $t('message.name_essential_fact') }}</td>
+          <td class="text-center">{{ $t('message.number_essential_fact') }}</td>
+          <td class="text-center">
+            {{ $t('Дата наступления существенного факта	') }}
+          </td>
+          <td class="text-center">
+            {{ $t('Дата публикации существенного факта	') }}
+          </td>
+        </tr>
+        <tr v-for="item in data.facts_report">
+          <th>{{ item.fact }}</th>
+          <td class="text-center">{{ item.fact_number }}</td>
+          <td class="text-center">{{ item.date }}</td>
+          <td class="text-center">{{ item.misc }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th class="table-header text-white" colspan="6">
             {{ $t('message.Balance sheet') }}
           </th>
         </tr>
@@ -391,6 +439,40 @@
               >Загрузить</a
             >
           </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table class="table table-hover table-bordered">
+      <thead>
+        <tr>
+          <th class="table-header text-white" colspan="6">
+            Список заключенных сделок с аффилированными лицами отчетном году
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="text-center">Дата заключения сделки</td>
+          <td class="text-center">
+            Ф.И.О. или полное наименование контрагента
+          </td>
+          <td class="text-center">Предмет сделки</td>
+          <td class="text-center">Сумма</td>
+          <td class="text-center">
+            Орган эмитента, принявший решение по сделкам
+          </td>
+          <td class="text-center">
+            Полные формулировки решений, принятых по сделкам
+          </td>
+        </tr>
+        <tr v-for="item in data.affiliates_deal_report">
+          <td>{{ item.deal_date }}</td>
+          <td>{{ item.counter_party_name }}</td>
+          <td>{{ item.deal_object }}</td>
+          <td>{{ item.deal_cost }}</td>
+          <td>{{ item.emitent_body }}</td>
+          <td>{{ item.decision_body }}</td>
         </tr>
       </tbody>
     </table>
